@@ -203,8 +203,9 @@ const apiService = {
   getInventoryStats: () =>
     apiRequest<any>('get', '/inventory/stats/'),
   
-  getLowStockProducts: () =>
-    apiRequest<any>('get', '/inventory/low-stock/'),
+  getLowStockProducts: () => apiRequest<any[]>('GET', '/inventory/low-stock'),
+  adjustStock: (productId: string, adjustment: number, reason: string) => 
+    apiRequest<any>('POST', `/inventory/products/${productId}/adjust-stock`, { adjustment, reason }),
 };
 
 export default apiService;

@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParams, useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 import { Box, Alert } from '@mui/material';
-import { fetchLeadById, createLead, updateLead } from '../../store/slices/crmSlice';
+import { fetchLead, createLead, updateLead } from '../../store/slices/crmSlice';
 import { RootState } from '../../store';
 import { AppDispatch } from '../../store';
 import PageHeader from '../../components/common/PageHeader';
@@ -14,7 +14,7 @@ const LeadDetail: React.FC = () => {
   const isNewLead = id === 'new';
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-  const { lead, isLoading, error } = useSelector((state: RootState) => state.crm);
+  const { currentLead, isLoading, error } = useSelector((state: RootState) => state.crm);
   const [initialValues, setInitialValues] = useState({
     first_name: '',
     last_name: '',
@@ -36,32 +36,32 @@ const LeadDetail: React.FC = () => {
 
   useEffect(() => {
     if (!isNewLead && id) {
-      dispatch(fetchLeadById(id));
+      dispatch(fetchLead(id));
     }
   }, [dispatch, id, isNewLead]);
 
   useEffect(() => {
-    if (!isNewLead && lead) {
+    if (!isNewLead && currentLead) {
       setInitialValues({
-        first_name: lead.first_name || '',
-        last_name: lead.last_name || '',
-        email: lead.email || '',
-        phone: lead.phone || '',
-        company: lead.company || '',
-        job_title: lead.job_title || '',
-        source: lead.source || '',
-        status: lead.status || 'New',
-        estimated_value: lead.estimated_value || 0,
-        address: lead.address || '',
-        city: lead.city || '',
-        state: lead.state || '',
-        zip_code: lead.zip_code || '',
-        country: lead.country || '',
-        website: lead.website || '',
-        notes: lead.notes || '',
+        first_name: currentLead.first_name || '',
+        last_name: currentLead.last_name || '',
+        email: currentLead.email || '',
+        phone: currentLead.phone || '',
+        company: currentLead.company || '',
+        job_title: currentLead.job_title || '',
+        source: currentLead.source || '',
+        status: currentLead.status || 'New',
+        estimated_value: currentLead.estimated_value || 0,
+        address: currentLead.address || '',
+        city: currentLead.city || '',
+        state: currentLead.state || '',
+        zip_code: currentLead.zip_code || '',
+        country: currentLead.country || '',
+        website: currentLead.website || '',
+        notes: currentLead.notes || '',
       });
     }
-  }, [lead, isNewLead]);
+  }, [currentLead, isNewLead]);
 
   const validationSchema = Yup.object({
     first_name: Yup.string().required('First name is required'),

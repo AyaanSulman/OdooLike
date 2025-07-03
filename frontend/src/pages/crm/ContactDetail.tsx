@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParams, useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 import { Box, Alert } from '@mui/material';
-import { fetchContactById, createContact, updateContact } from '../../store/slices/crmSlice';
+import { fetchContact, createContact, updateContact } from '../../store/slices/crmSlice';
 import { RootState } from '../../store';
 import { AppDispatch } from '../../store';
 import PageHeader from '../../components/common/PageHeader';
@@ -14,7 +14,7 @@ const ContactDetail: React.FC = () => {
   const isNewContact = id === 'new';
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-  const { contact, isLoading, error } = useSelector((state: RootState) => state.crm);
+  const { currentContact, isLoading, error } = useSelector((state: RootState) => state.crm);
   const [initialValues, setInitialValues] = useState({
     first_name: '',
     last_name: '',
@@ -36,32 +36,32 @@ const ContactDetail: React.FC = () => {
 
   useEffect(() => {
     if (!isNewContact && id) {
-      dispatch(fetchContactById(id));
+      dispatch(fetchContact(id));
     }
   }, [dispatch, id, isNewContact]);
 
   useEffect(() => {
-    if (!isNewContact && contact) {
+    if (!isNewContact && currentContact) {
       setInitialValues({
-        first_name: contact.first_name || '',
-        last_name: contact.last_name || '',
-        email: contact.email || '',
-        phone: contact.phone || '',
-        company: contact.company || '',
-        job_title: contact.job_title || '',
-        type: contact.type || '',
-        status: contact.status || '',
-        address: contact.address || '',
-        city: contact.city || '',
-        state: contact.state || '',
-        zip_code: contact.zip_code || '',
-        country: contact.country || '',
-        website: contact.website || '',
-        notes: contact.notes || '',
-        is_active: contact.is_active !== false,
+        first_name: currentContact.first_name || '',
+        last_name: currentContact.last_name || '',
+        email: currentContact.email || '',
+        phone: currentContact.phone || '',
+        company: currentContact.company || '',
+        job_title: currentContact.job_title || '',
+        type: currentContact.type || '',
+        status: currentContact.status || '',
+        address: currentContact.address || '',
+        city: currentContact.city || '',
+        state: currentContact.state || '',
+        zip_code: currentContact.zip_code || '',
+        country: currentContact.country || '',
+        website: currentContact.website || '',
+        notes: currentContact.notes || '',
+        is_active: currentContact.is_active !== false,
       });
     }
-  }, [contact, isNewContact]);
+  }, [currentContact, isNewContact]);
 
   const validationSchema = Yup.object({
     first_name: Yup.string().required('First name is required'),

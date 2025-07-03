@@ -29,7 +29,7 @@ const Products: React.FC = () => {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
   useEffect(() => {
-    dispatch(fetchProducts());
+    dispatch(fetchProducts({}));
   }, [dispatch]);
 
   const handlePageChange = (newPage: number) => {

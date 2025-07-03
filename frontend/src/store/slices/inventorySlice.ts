@@ -335,6 +335,17 @@ export const fetchLowStockProducts = createAsyncThunk(
   }
 );
 
+export const adjustStock = createAsyncThunk(
+  'inventory/adjustStock',
+  async ({ productId, adjustment, reason }: { productId: string; adjustment: number; reason: string }, { rejectWithValue }) => {
+    try {
+      return await apiService.adjustStock(productId, adjustment, reason);
+    } catch (error: any) {
+      return rejectWithValue(error.message || 'Failed to adjust stock');
+    }
+  }
+);
+
 const inventorySlice = createSlice({
   name: 'inventory',
   initialState,

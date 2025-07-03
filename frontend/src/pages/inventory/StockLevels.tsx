@@ -44,9 +44,9 @@ const StockLevels: React.FC = () => {
   const [adjustDialogOpen, setAdjustDialogOpen] = useState(false);
 
   useEffect(() => {
-    dispatch(fetchStockLevels());
-    dispatch(fetchProducts());
-    dispatch(fetchWarehouses());
+    dispatch(fetchStockLevels({}));
+    dispatch(fetchProducts({}));
+    dispatch(fetchWarehouses({}));
   }, [dispatch]);
 
   const handlePageChange = (newPage: number) => {
@@ -166,23 +166,7 @@ const StockLevels: React.FC = () => {
       id: 'status',
       label: 'Status',
       minWidth: 120,
-      format: (value: string) => {
-        let color;
-        switch (value) {
-          case 'In Stock':
-            color = 'success.main';
-            break;
-          case 'Low Stock':
-            color = 'warning.main';
-            break;
-          case 'Out of Stock':
-            color = 'error.main';
-            break;
-          default:
-            color = 'text.primary';
-        }
-        return <Typography sx={{ color }}>{value}</Typography>;
-      },
+      format: (value: string) => value,
     },
     { id: 'last_updated', label: 'Last Updated', minWidth: 120 },
   ];
@@ -198,7 +182,11 @@ const StockLevels: React.FC = () => {
   });
 
   const handleSubmit = async (values: StockAdjustmentFormValues) => {
-    await dispatch(adjustStock(values));
+    await dispatch(adjustStock({
+      productId: values.product_id,
+      adjustment: values.quantity,
+      reason: values.reason
+    }));
     setAdjustDialogOpen(false);
   };
 

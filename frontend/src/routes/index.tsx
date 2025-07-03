@@ -2,8 +2,8 @@ import React from 'react';
 import { Navigate } from 'react-router-dom';
 
 // Layouts
-import MainLayout from '../layouts/MainLayout';
-import AuthLayout from '../layouts/AuthLayout';
+import MainLayout from '../components/layouts/MainLayout';
+import AuthLayout from '../components/layouts/AuthLayout';
 
 // Auth Pages
 import Login from '../pages/auth/Login';

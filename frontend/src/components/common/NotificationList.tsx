@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   List,
   ListItem,
@@ -9,9 +9,9 @@ import {
   Divider,
   Box,
   Button,
+  Popover,
 } from '@mui/material';
 import {
-  Notifications as NotificationsIcon,
   ShoppingCart as ShoppingCartIcon,
   Person as PersonIcon,
   Assignment as AssignmentIcon,
@@ -45,18 +45,17 @@ const notifications = [
   },
 ];
 
-const getAvatarByType = (type: string) => {
+const getNotificationIcon = (type: string) => {
   switch (type) {
     case 'order':
       return <ShoppingCartIcon />;
+    case 'stock':
+      return <WarningIcon />;
     case 'lead':
       return <PersonIcon />;
-    case 'stock':
-      return <AssignmentIcon />;
     case 'alert':
-      return <WarningIcon />;
     default:
-      return <NotificationsIcon />;
+      return <AssignmentIcon />;
   }
 };
 
@@ -75,9 +74,57 @@ const getAvatarColorByType = (type: string) => {
   }
 };
 
-const NotificationList: React.FC = () => {
+interface NotificationListProps {
+  open: boolean;
+  onClose: () => void;
+  anchorEl: HTMLElement | null;
+}
+
+const NotificationList: React.FC<NotificationListProps> = ({ open, onClose, anchorEl }) => {
+  const [notifications, setNotifications] = useState([
+    {
+      id: 1,
+      type: 'order',
+      message: 'New purchase order #PO-2023-001 has been created',
+      time: '5 minutes ago',
+    },
+    {
+      id: 2,
+      type: 'stock',
+      message: 'Product "Laptop XPS 15" is running low on stock',
+      time: '1 hour ago',
+    },
+    {
+      id: 3,
+      type: 'lead',
+      message: 'New lead assigned: John Smith from Acme Corp',
+      time: '3 hours ago',
+    },
+    {
+      id: 4,
+      type: 'alert',
+      message: 'System maintenance scheduled for tonight at 2 AM',
+      time: 'Yesterday',
+    },
+  ]);
+
   return (
-    <>
+    <Popover
+      open={open}
+      anchorEl={anchorEl}
+      onClose={onClose}
+      anchorOrigin={{
+        vertical: 'bottom',
+        horizontal: 'right',
+      }}
+      transformOrigin={{
+        vertical: 'top',
+        horizontal: 'right',
+      }}
+      PaperProps={{
+        style: { width: 350, maxHeight: 500, overflow: 'auto' },
+      }}
+    >
       <Box sx={{ p: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <Typography variant="h6">Notifications</Typography>
         <Button size="small">Mark all as read</Button>
@@ -90,7 +137,7 @@ const NotificationList: React.FC = () => {
               <ListItem alignItems="flex-start" sx={{ px: 2, py: 1.5 }}>
                 <ListItemAvatar>
                   <Avatar sx={{ bgcolor: getAvatarColorByType(notification.type) }}>
-                    {getAvatarByType(notification.type)}
+                    {getNotificationIcon(notification.type)}
                   </Avatar>
                 </ListItemAvatar>
                 <ListItemText
@@ -122,7 +169,7 @@ const NotificationList: React.FC = () => {
           View all notifications
         </Button>
       </Box>
-    </>
+    </Popover>
   );
 };
 
